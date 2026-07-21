@@ -191,8 +191,8 @@ npm run dev
 | Name | Role |
 |------|------|
 | Piyush Dubey | Team Leader / Full Stack Developer |
-| Sakshi Kumari | Frontend Developer |
-| Jaya Maurya | Backend Developer |
+| Sakshi Kumari |Backend Developer |
+| Jaya Maurya | Frontend Developer |
 | Shubham Singh | Database & API Developer |
 | Priya Goswami | Testing & Documentation |
 
