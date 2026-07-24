@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import MainLayout from "../components/layout/MainLayout";
 
 import Home from "../pages/Home";
+import Products from "../pages/Products";
+import ProductDetails from "../pages/ProductDetails";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Cart from "../pages/Cart";
@@ -18,6 +20,25 @@ function AppRoutes() {
         element={
           <MainLayout>
             <Home />
+          </MainLayout>
+        }
+      />
+
+      <Route
+        path="/products"
+        element={
+          <MainLayout>
+            <Products />
+          </MainLayout>
+        }
+      />
+
+      {/* Product Details */}
+      <Route
+        path="/products/:id"
+        element={
+          <MainLayout>
+            <ProductDetails />
           </MainLayout>
         }
       />
@@ -67,7 +88,14 @@ function AppRoutes() {
         }
       />
 
-      <Route path="*" element={<NotFound />} />
+      <Route
+        path="*"
+        element={
+          <MainLayout>
+            <NotFound />
+          </MainLayout>
+        }
+      />
     </Routes>
   );
 }
