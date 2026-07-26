@@ -20,14 +20,14 @@ function ProductCard({ product }) {
   );
 
   const isWishlisted = wishlistItems.some(
-    (item) => item.id === product.id
+    (item) => item._id === product._id
   );
 
   const handleWishlist = (e) => {
     e.preventDefault();
 
     if (isWishlisted) {
-      dispatch(removeFromWishlist(product.id));
+      dispatch(removeFromWishlist(product._id));
     } else {
       dispatch(addToWishlist(product));
     }
@@ -40,14 +40,22 @@ function ProductCard({ product }) {
 
   return (
     <Link
-      to={`/products/${product.id}`}
+      to={`/products/${product._id}`}
       className="block"
     >
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 overflow-hidden">
 
         {/* Product Image */}
-        <div className="h-52 flex items-center justify-center text-7xl bg-gray-100">
-          {product.image}
+        <div className="h-52 flex items-center justify-center bg-gray-100">
+          <img
+            src={product.images?.[0]}
+            alt={product.name}
+            className="h-full w-full object-contain p-4"
+            onError={(e) => {
+              e.target.src =
+                "https://via.placeholder.com/250x250?text=No+Image";
+            }}
+          />
         </div>
 
         {/* Product Details */}
@@ -64,19 +72,18 @@ function ProductCard({ product }) {
           <div className="flex items-center mt-2 text-yellow-500">
             <FaStar />
             <span className="ml-2 text-gray-700">
-              {product.rating}
+              {product.rating || 4.5}
             </span>
           </div>
 
           <p className="text-2xl font-bold text-cyan-600 mt-3">
-            ₹{product.price.toLocaleString("en-IN")}
+            ₹{Number(product.price).toLocaleString("en-IN")}
           </p>
 
           <p className="text-sm text-gray-500 mt-1">
             Stock: {product.stock}
           </p>
 
-          {/* Buttons */}
           <div className="flex gap-3 mt-5">
 
             <button

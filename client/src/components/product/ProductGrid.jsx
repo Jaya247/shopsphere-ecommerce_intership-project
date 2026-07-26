@@ -1,7 +1,6 @@
 import ProductCard from "./ProductCard";
-import products from "../../constants/products";
 
-function ProductGrid() {
+function ProductGrid({ products = [] }) {
   return (
     <section className="py-16">
       <div className="max-w-7xl mx-auto px-5">
@@ -9,14 +8,20 @@ function ProductGrid() {
           All Products
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
-          ))}
-        </div>
+        {products.length === 0 ? (
+          <div className="text-center text-gray-500 text-lg">
+            No Products Found
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

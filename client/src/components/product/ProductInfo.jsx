@@ -10,11 +10,12 @@ function ProductInfo({ product }) {
     alert(`${product.name} added to cart 🛒`);
   };
 
-  const originalPrice = Math.round(product.price * 1.2);
+  const discount = product.discount || 0;
 
-  const discount = Math.round(
-    ((originalPrice - product.price) / originalPrice) * 100
-  );
+  const originalPrice =
+    discount > 0
+      ? Math.round(Number(product.price) / (1 - discount / 100))
+      : Number(product.price);
 
   return (
     <div>
@@ -22,6 +23,14 @@ function ProductInfo({ product }) {
       <span className="text-cyan-600 font-semibold text-lg">
         {product.category}
       </span>
+
+      {/* Brand */}
+      <p className="text-gray-600 mt-2">
+        Brand:{" "}
+        <span className="font-semibold">
+          {product.brand}
+        </span>
+      </p>
 
       {/* Product Name */}
       <h1 className="text-5xl font-bold mt-3">
@@ -33,35 +42,47 @@ function ProductInfo({ product }) {
         <span className="text-yellow-500 text-2xl">⭐</span>
 
         <span className="text-lg font-semibold">
-          {product.rating}
+          {product.rating || 4.5}
         </span>
 
         <span className="text-gray-500">
-          (2,348 Reviews)
+          ({product.numReviews || 0} Reviews)
         </span>
       </div>
 
       {/* Price */}
       <div className="mt-6 flex items-center gap-4">
         <span className="text-5xl font-bold text-cyan-600">
-          ₹{product.price.toLocaleString("en-IN")}
+          ₹{Number(product.price).toLocaleString("en-IN")}
         </span>
 
-        <span className="text-2xl text-gray-400 line-through">
-          ₹{originalPrice.toLocaleString("en-IN")}
-        </span>
+        {discount > 0 && (
+          <>
+            <span className="text-2xl text-gray-400 line-through">
+              ₹{originalPrice.toLocaleString("en-IN")}
+            </span>
 
-        <span className="bg-red-500 text-white px-3 py-1 rounded-lg font-semibold">
-          {discount}% OFF
-        </span>
+            <span className="bg-red-500 text-white px-3 py-1 rounded-lg font-semibold">
+              {discount}% OFF
+            </span>
+          </>
+        )}
       </div>
 
       {/* Stock */}
       <p className="mt-5 text-lg">
         Stock :
-        <span className="text-green-600 font-bold">
+        <span
+          className={`font-bold ${
+            product.stock > 0
+              ? "text-green-600"
+              : "text-red-600"
+          }`}
+        >
           {" "}
-          {product.stock} Available
+          {product.stock > 0
+            ? `${product.stock} Available`
+            : "Out of Stock"}
         </span>
       </p>
 
@@ -84,27 +105,34 @@ function ProductInfo({ product }) {
         </h2>
 
         <p className="text-gray-600 leading-8 mt-3">
-          This premium quality product offers excellent
-          performance, durability and a modern design.
-          Built with high-quality materials, it is perfect
-          for everyday use and long-term reliability.
+          {product.description}
         </p>
       </div>
 
       {/* Buttons */}
       <div className="flex gap-5 mt-8">
-
         <button
           onClick={handleAddToCart}
-          className="flex-1 bg-cyan-500 text-white py-4 rounded-xl text-lg font-semibold hover:bg-cyan-600 transition"
+          disabled={product.stock === 0}
+          className={`flex-1 py-4 rounded-xl text-lg font-semibold transition ${
+            product.stock > 0
+              ? "bg-cyan-500 hover:bg-cyan-600 text-white"
+              : "bg-gray-400 text-white cursor-not-allowed"
+          }`}
         >
           🛒 Add to Cart
         </button>
 
-        <button className="flex-1 bg-green-600 text-white py-4 rounded-xl text-lg font-semibold hover:bg-green-700 transition">
+        <button
+          disabled={product.stock === 0}
+          className={`flex-1 py-4 rounded-xl text-lg font-semibold transition ${
+            product.stock > 0
+              ? "bg-green-600 hover:bg-green-700 text-white"
+              : "bg-gray-400 text-white cursor-not-allowed"
+          }`}
+        >
           Buy Now
         </button>
-
       </div>
     </div>
   );

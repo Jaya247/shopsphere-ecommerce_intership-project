@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import API from "../api/axios";
+
 import Hero from "../components/home/Hero";
 import Categories from "../components/home/Categories";
 import FeaturedProducts from "../components/home/FeaturedProducts";
@@ -7,6 +10,21 @@ import Banner from "../components/home/Banner";
 import ProductGrid from "../components/product/ProductGrid";
 
 function Home() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await API.get("/products");
+        setProducts(data.products);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <>
       <Hero />
@@ -15,7 +33,8 @@ function Home() {
       <NewArrivals />
       <BestSeller />
       <Banner />
-      <ProductGrid />
+
+      <ProductGrid products={products} />
     </>
   );
 }

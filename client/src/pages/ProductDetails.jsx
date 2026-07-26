@@ -1,14 +1,39 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import products from "../constants/products";
+
+import API from "../api/axios";
+
 import ProductImageGallery from "../components/product/ProductImageGallery";
 import ProductInfo from "../components/product/ProductInfo";
 
 function ProductDetails() {
   const { id } = useParams();
 
-  const product = products.find(
-    (item) => item.id === Number(id)
-  );
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const { data } = await API.get(`/products/${id}`);
+        setProduct(data.product);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="text-center text-3xl mt-20">
+        Loading...
+      </div>
+    );
+  }
 
   if (!product) {
     return (

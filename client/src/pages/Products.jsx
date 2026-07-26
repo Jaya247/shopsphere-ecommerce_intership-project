@@ -1,16 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import API from "../api/axios";
 
 import ProductSearch from "../components/product/ProductSearch";
 import ProductFilter from "../components/product/ProductFilter";
 import ProductSort from "../components/product/ProductSort";
 import ProductGrid from "../components/product/ProductGrid";
 
-import products from "../constants/products";
-
 function Products() {
+  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("");
+
+  // Fetch Products from Backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await API.get("/products");
+        setProducts(data.products);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Filter Products
   const filteredProducts = products.filter((product) => {
@@ -36,7 +51,7 @@ function Products() {
   }
 
   if (sort === "rating") {
-    sortedProducts.sort((a, b) => b.rating - a.rating);
+    sortedProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0));
   }
 
   return (
@@ -61,9 +76,7 @@ function Products() {
       </div>
 
       {/* Products */}
-      <ProductGrid
-        products={sortedProducts}
-      />
+      <ProductGrid products={sortedProducts} />
     </div>
   );
 }
