@@ -15,10 +15,20 @@ function ProductDetails() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        console.log("Product ID:", id);
+
         const { data } = await API.get(`/products/${id}`);
+
+        console.log("API Response:", data);
+
         setProduct(data.product);
       } catch (error) {
-        console.log(error);
+        console.error("API Error:", error);
+
+        if (error.response) {
+          console.log("Status:", error.response.status);
+          console.log("Response:", error.response.data);
+        }
       } finally {
         setLoading(false);
       }
@@ -47,10 +57,8 @@ function ProductDetails() {
     <div className="max-w-7xl mx-auto px-6 py-10">
       <div className="grid md:grid-cols-2 gap-10">
 
-        {/* Product Image Gallery */}
         <ProductImageGallery product={product} />
 
-        {/* Product Information */}
         <ProductInfo product={product} />
 
       </div>

@@ -1,27 +1,44 @@
 import express from "express";
+
 import {
   addProduct,
   getProducts,
   getProductById,
   updateProduct,
   deleteProduct,
+  getFeaturedProducts,
+  getNewArrivals,
+  getBestSellers,
+  searchProducts,
+  getCategories,
 } from "../controllers/productController.js";
 
 const router = express.Router();
 
-// Add Product
+// =============================
+// Special Routes
+// =============================
+router.get("/featured", getFeaturedProducts);
+
+router.get("/new", getNewArrivals);
+
+router.get("/bestsellers", getBestSellers);
+
+router.get("/search", searchProducts);
+
+router.get("/categories", getCategories);
+
+// =============================
+// CRUD Routes
+// =============================
 router.post("/", addProduct);
 
-// Get All Products
 router.get("/", getProducts);
 
-// Get Single Product
 router.get("/:id", getProductById);
 
-// Update Product
 router.put("/:id", updateProduct);
 
-// Delete Product
 router.delete("/:id", deleteProduct);
 
 export default router;

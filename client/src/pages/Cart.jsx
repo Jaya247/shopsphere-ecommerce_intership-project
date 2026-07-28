@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   removeFromCart,
   increaseQuantity,
@@ -10,6 +11,7 @@ function Cart() {
   const dispatch = useDispatch();
 
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const navigate = useNavigate();
 
   const totalItems = cartItems.reduce(
     (total, item) => total + item.quantity,
@@ -47,20 +49,31 @@ function Cart() {
       <div className="grid lg:grid-cols-3 gap-8">
 
         {/* Cart Items */}
-
         <div className="lg:col-span-2 space-y-6">
 
           {cartItems.map((item) => (
 
             <div
-              key={item.id}
+              key={item._id}
               className="bg-white rounded-xl shadow-md p-5 flex items-center gap-5"
             >
 
-              <div className="w-28 h-28 bg-gray-100 rounded-lg flex items-center justify-center text-6xl">
-                {item.image}
+              {/* Product Image */}
+              <div className="w-28 h-28 bg-gray-100 rounded-lg overflow-hidden">
+
+                <img
+                  src={item.images?.[0]}
+                  alt={item.name}
+                  className="w-full h-full object-contain p-2"
+                  onError={(e) => {
+                    e.target.src =
+                      "https://via.placeholder.com/150?text=No+Image";
+                  }}
+                />
+
               </div>
 
+              {/* Product Info */}
               <div className="flex-1">
 
                 <h2 className="text-2xl font-bold">
@@ -68,14 +81,14 @@ function Cart() {
                 </h2>
 
                 <p className="text-cyan-600 font-semibold mt-2">
-                  ₹{item.price.toLocaleString("en-IN")}
+                  ₹{Number(item.price).toLocaleString("en-IN")}
                 </p>
 
                 <div className="flex items-center gap-3 mt-4">
 
                   <button
                     onClick={() =>
-                      dispatch(decreaseQuantity(item.id))
+                      dispatch(decreaseQuantity(item._id))
                     }
                     className="w-10 h-10 rounded-lg bg-gray-200 hover:bg-gray-300"
                   >
@@ -87,13 +100,11 @@ function Cart() {
                   </span>
 
                   <button
-                    onClick={() =>
-                      dispatch(increaseQuantity(item.id))
-                    }
-                    className="w-10 h-10 rounded-lg bg-gray-200 hover:bg-gray-300"
+                  onClick={() => navigate("/checkout")}
+                  className="w-full mt-8 bg-green-600 text-white py-4 rounded-xl hover:bg-green-700 transition"
                   >
-                    +
-                  </button>
+                 Proceed to Checkout
+                 </button>
 
                 </div>
 
@@ -102,9 +113,9 @@ function Cart() {
                   <span className="text-cyan-600">
                     {" "}
                     ₹
-                    {(item.price * item.quantity).toLocaleString(
-                      "en-IN"
-                    )}
+                    {(
+                      Number(item.price) * item.quantity
+                    ).toLocaleString("en-IN")}
                   </span>
                 </p>
 
@@ -112,9 +123,9 @@ function Cart() {
 
               <button
                 onClick={() =>
-                  dispatch(removeFromCart(item.id))
+                  dispatch(removeFromCart(item._id))
                 }
-                className="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600"
+                className="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition"
               >
                 Remove
               </button>
@@ -125,8 +136,7 @@ function Cart() {
 
         </div>
 
-        {/* Summary */}
-
+        {/* Order Summary */}
         <div className="bg-white shadow-lg rounded-xl p-6 h-fit sticky top-24">
 
           <h2 className="text-2xl font-bold mb-6">
@@ -135,21 +145,20 @@ function Cart() {
 
           <div className="flex justify-between mb-4">
             <span>Total Items</span>
-
             <span>{totalItems}</span>
           </div>
 
           <div className="flex justify-between text-xl font-bold">
-
             <span>Total</span>
 
             <span className="text-cyan-600">
               ₹{totalPrice.toLocaleString("en-IN")}
             </span>
-
           </div>
 
-          <button className="w-full mt-8 bg-green-600 text-white py-4 rounded-xl hover:bg-green-700 transition">
+          <button
+            className="w-full mt-8 bg-green-600 text-white py-4 rounded-xl hover:bg-green-700 transition"
+          >
             Proceed to Checkout
           </button>
 

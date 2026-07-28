@@ -43,9 +43,10 @@ export const registerUser = async (req, res) => {
       message: "User Registered Successfully",
       token: generateToken(user._id),
       user: {
-        id: user._id,
+        _id: user._id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin,
       },
     });
 
@@ -82,8 +83,11 @@ export const loginUser = async (req, res) => {
       });
     }
 
-    // Compare password
-    const isMatch = await bcrypt.compare(password, user.password);
+    // Compare Password
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
 
     if (!isMatch) {
       return res.status(400).json({
@@ -98,9 +102,10 @@ export const loginUser = async (req, res) => {
       message: "Login Successful",
       token: generateToken(user._id),
       user: {
-        id: user._id,
+        _id: user._id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin,
       },
     });
 
@@ -111,14 +116,21 @@ export const loginUser = async (req, res) => {
     });
   }
 };
+
+// =======================
+// Get Profile
+// =======================
 export const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    const user = await User.findById(req.user.id).select(
+      "-password"
+    );
 
     res.status(200).json({
       success: true,
       user,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,

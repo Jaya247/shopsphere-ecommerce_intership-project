@@ -1,22 +1,42 @@
+import { useEffect, useState } from "react";
+import API from "../../api/axios";
+
 function ProductFilter({ category, setCategory }) {
-    return (
-      <div className="flex justify-center mb-8">
-  
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="border border-gray-300 rounded-lg px-5 py-3"
-        >
-          <option value="All">All Categories</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Fashion">Fashion</option>
-          <option value="Gaming">Gaming</option>
-          <option value="Camera">Camera</option>
-          <option value="Accessories">Accessories</option>
-        </select>
-  
-      </div>
-    );
-  }
-  
-  export default ProductFilter;
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await API.get("/products/categories");
+        setCategories(data.categories);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  return (
+    <div className="flex justify-center">
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        className="border border-gray-300 rounded-lg px-5 py-3 outline-none focus:ring-2 focus:ring-cyan-500"
+      >
+        <option value="All">All Categories</option>
+
+        {categories.map((item) => (
+          <option
+            key={item._id}
+            value={item._id}
+          >
+            {item._id} ({item.count})
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+export default ProductFilter;
