@@ -108,6 +108,37 @@ export const getOrderById = async (req, res) => {
 };
 
 // ======================================
+// Get My Orders
+// ======================================
+export const getMyOrders = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid User ID",
+      });
+    }
+
+    const orders = await Order.find({ user: userId })
+      .populate("orderItems.product", "name images price")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: orders.length,
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ======================================
 // Update Order Status
 // ======================================
 export const updateOrderStatus = async (req, res) => {

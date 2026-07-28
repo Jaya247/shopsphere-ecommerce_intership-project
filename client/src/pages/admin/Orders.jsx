@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../../api/axios";
 
 function Orders() {
+  const navigate = useNavigate();
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -100,17 +103,16 @@ function Orders() {
         <table className="w-full">
 
           <thead className="bg-slate-900 text-white">
-
             <tr>
               <th className="p-4">Customer</th>
               <th className="p-4">Items</th>
+              <th className="p-4">Date</th>
               <th className="p-4">Payment</th>
               <th className="p-4">Total</th>
               <th className="p-4">Status</th>
               <th className="p-4">Update Status</th>
-              <th className="p-4">Action</th>
+              <th className="p-4">Actions</th>
             </tr>
-
           </thead>
 
           <tbody>
@@ -131,6 +133,10 @@ function Orders() {
                 </td>
 
                 <td className="p-4">
+                  {new Date(order.createdAt).toLocaleDateString("en-IN")}
+                </td>
+
+                <td className="p-4">
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-semibold ${
                       order.isPaid
@@ -143,14 +149,10 @@ function Orders() {
                 </td>
 
                 <td className="p-4 font-bold text-cyan-600">
-                  ₹
-                  {Number(order.totalPrice).toLocaleString(
-                    "en-IN"
-                  )}
+                  ₹{Number(order.totalPrice).toLocaleString("en-IN")}
                 </td>
 
                 <td className="p-4">
-
                   <span
                     className={`px-3 py-2 rounded-full text-sm font-bold ${getStatusColor(
                       order.status
@@ -158,7 +160,6 @@ function Orders() {
                   >
                     {order.status}
                   </span>
-
                 </td>
 
                 <td className="p-4">
@@ -166,43 +167,32 @@ function Orders() {
                   <select
                     value={order.status}
                     onChange={(e) =>
-                      updateStatus(
-                        order._id,
-                        e.target.value
-                      )
+                      updateStatus(order._id, e.target.value)
                     }
                     className="border rounded-lg px-3 py-2"
                   >
-                    <option value="Pending">
-                      Pending
-                    </option>
-
-                    <option value="Processing">
-                      Processing
-                    </option>
-
-                    <option value="Shipped">
-                      Shipped
-                    </option>
-
-                    <option value="Delivered">
-                      Delivered
-                    </option>
-
-                    <option value="Cancelled">
-                      Cancelled
-                    </option>
-
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
                   </select>
 
                 </td>
 
-                <td className="p-4">
+                <td className="p-4 flex justify-center gap-2">
 
                   <button
                     onClick={() =>
-                      deleteOrder(order._id)
+                      navigate(`/admin/orders/${order._id}`)
                     }
+                    className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg"
+                  >
+                    View
+                  </button>
+
+                  <button
+                    onClick={() => deleteOrder(order._id)}
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg"
                   >
                     Delete

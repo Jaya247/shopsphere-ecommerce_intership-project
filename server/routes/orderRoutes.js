@@ -3,6 +3,7 @@ import express from "express";
 import {
   placeOrder,
   getOrders,
+  getMyOrders,
   getOrderById,
   updateOrderStatus,
   updatePaymentStatus,
@@ -17,7 +18,12 @@ const router = express.Router();
 router.post("/", placeOrder);
 
 // ======================================
-// Get All Orders
+// My Orders (Logged In User)
+// ======================================
+router.get("/my-orders/:userId", getMyOrders);
+
+// ======================================
+// Get All Orders (Admin)
 // ======================================
 router.get("/", getOrders);
 

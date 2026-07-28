@@ -12,6 +12,7 @@ import Checkout from "../pages/Checkout";
 import Wishlist from "../pages/Wishlist";
 import Profile from "../pages/Profile";
 import MyOrders from "../pages/MyOrders";
+import OrderDetails from "../pages/OrderDetails";
 import NotFound from "../pages/NotFound";
 
 // Admin Pages
@@ -119,6 +120,14 @@ function AppRoutes() {
           </MainLayout>
         }
       />
+      <Route
+        path="/orders/:id"
+        element={
+          <MainLayout>
+           <OrderDetails />
+            </MainLayout>
+          }
+       />
 
       {/* ========================= */}
       {/* Admin Routes */}

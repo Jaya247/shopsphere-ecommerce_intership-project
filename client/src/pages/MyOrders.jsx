@@ -5,24 +5,39 @@ function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const { data } = await API.get("/orders");
-        setOrders(data.orders);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loginUser = JSON.parse(
+    localStorage.getItem("user")
+  );
 
+  useEffect(() => {
     fetchOrders();
   }, []);
 
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+
+      if (!loginUser?._id) {
+        setOrders([]);
+        return;
+      }
+
+      const { data } = await API.get(
+        `/orders/my-orders/${loginUser._id}`
+      );
+
+      setOrders(data.orders);
+    } catch (error) {
+      console.log(error);
+      alert("Unable to load orders");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
-      <div className="text-center py-20 text-2xl">
+      <div className="text-center text-3xl mt-20">
         Loading Orders...
       </div>
     );
@@ -41,8 +56,7 @@ function MyOrders() {
       </div>
     );
   }
-
-  return (
+    return (
     <div className="max-w-7xl mx-auto px-6 py-10">
 
       <h1 className="text-4xl font-bold mb-8">
@@ -71,6 +85,16 @@ function MyOrders() {
                 </p>
 
                 <p className="mt-3">
+                  Order Date :
+                  <span className="font-semibold">
+                    {" "}
+                    {new Date(
+                      order.createdAt
+                    ).toLocaleDateString("en-IN")}
+                  </span>
+                </p>
+
+                <p className="mt-2">
                   Payment :
                   <span className="font-semibold">
                     {" "}
@@ -81,39 +105,33 @@ function MyOrders() {
                 <p className="mt-2">
                   Total :
                   <span className="font-bold text-cyan-600">
-                    {" "}
                     ₹
-                    {Number(order.totalPrice).toLocaleString(
-                      "en-IN"
-                    )}
+                    {Number(
+                      order.totalPrice
+                    ).toLocaleString("en-IN")}
                   </span>
                 </p>
 
               </div>
 
-              <div className="mt-5 md:mt-0">
-
-                <span
-                  className={`px-4 py-2 rounded-full text-white ${
-                    order.isPaid
-                      ? "bg-green-600"
-                      : "bg-red-500"
-                  }`}
-                >
-                  {order.isPaid ? "Paid" : "Unpaid"}
+              <div className="mt-5 md:mt-0 flex items-center gap-3 self-start md:self-auto">
+              <span
+               className={`px-4 py-2 rounded-full text-white font-semibold ${
+                order.status === "Pending"
+               ? "bg-yellow-500"
+                : order.status === "Processing"
+                ? "bg-blue-500"
+                : order.status === "Shipped"
+                ? "bg-purple-600"
+               : order.status === "Delivered"
+                ? "bg-green-600"
+                 : "bg-red-600"
+                }`}
+                   >
+               {order.status}
                 </span>
 
-                <span
-                  className={`ml-3 px-4 py-2 rounded-full text-white ${
-                    order.isDelivered
-                      ? "bg-blue-600"
-                      : "bg-yellow-500"
-                  }`}
-                >
-                  {order.isDelivered
-                    ? "Delivered"
-                    : "Pending"}
-                </span>
+               
 
               </div>
 
@@ -156,9 +174,9 @@ function MyOrders() {
 
                     <p className="text-cyan-600 font-semibold">
                       ₹
-                      {Number(item.price).toLocaleString(
-                        "en-IN"
-                      )}
+                      {Number(
+                        item.price
+                      ).toLocaleString("en-IN")}
                     </p>
 
                   </div>

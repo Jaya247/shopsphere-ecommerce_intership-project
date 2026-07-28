@@ -8,6 +8,18 @@ import {
   FaRupeeSign,
 } from "react-icons/fa";
 
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+
 import API from "../../api/axios";
 
 function Dashboard() {
@@ -23,6 +35,9 @@ function Dashboard() {
   const [latestProducts, setLatestProducts] = useState([]);
   const [latestUsers, setLatestUsers] = useState([]);
   const [latestOrders, setLatestOrders] = useState([]);
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+  const [categoryAnalytics, setCategoryAnalytics] = useState([]);
+  const [lowStockProducts, setLowStockProducts] = useState([]);
 
   const fetchDashboard = async () => {
     try {
@@ -34,6 +49,10 @@ function Dashboard() {
       setLatestProducts(data.latestProducts);
       setLatestUsers(data.latestUsers);
       setLatestOrders(data.latestOrders);
+
+      setMonthlyRevenue(data.monthlyRevenue);
+      setCategoryAnalytics(data.categoryAnalytics);
+      setLowStockProducts(data.lowStockProducts);
     } catch (error) {
       console.log(error);
       alert("Unable to load dashboard");
@@ -164,68 +183,297 @@ function Dashboard() {
           </Link>
 
         </div>
+        
+        {/* ========================= */}
+{/* Charts Section */}
+{/* ========================= */}
 
-        {/* Latest Products */}
+<div className="grid lg:grid-cols-2 gap-8 mt-12">
 
-        <div className="grid lg:grid-cols-3 gap-8 mt-14">
+  {/* Revenue Chart */}
 
-          <div className="bg-white rounded-xl shadow p-6">
+  <div className="bg-white rounded-xl shadow p-6">
 
-            <h2 className="text-2xl font-bold mb-5">
-              Latest Products
-            </h2>
+    <h2 className="text-2xl font-bold mb-6">
+      Monthly Revenue
+    </h2>
 
-            {latestProducts.map((product) => (
-              <div
-                key={product._id}
-                className="border-b py-2"
-              >
-                {product.name}
-              </div>
-            ))}
+    <ResponsiveContainer
+      width="100%"
+      height={300}
+    >
 
-          </div>
+      <BarChart data={monthlyRevenue}>
 
-          <div className="bg-white rounded-xl shadow p-6">
+        <XAxis dataKey="_id.month" />
 
-            <h2 className="text-2xl font-bold mb-5">
-              Latest Users
-            </h2>
+        <YAxis />
 
-            {latestUsers.map((user) => (
-              <div
-                key={user._id}
-                className="border-b py-2"
-              >
-                {user.name}
-              </div>
-            ))}
+        <Tooltip />
 
-          </div>
+        <Bar
+          dataKey="revenue"
+          fill="#06b6d4"
+          radius={[8,8,0,0]}
+        />
 
-          <div className="bg-white rounded-xl shadow p-6">
+      </BarChart>
 
-            <h2 className="text-2xl font-bold mb-5">
-              Latest Orders
-            </h2>
+    </ResponsiveContainer>
 
-            {latestOrders.map((order) => (
-              <div
-                key={order._id}
-                className="border-b py-2"
-              >
-                {order.shippingAddress?.fullName}
-              </div>
-            ))}
+  </div>
+
+  {/* Category Chart */}
+
+  <div className="bg-white rounded-xl shadow p-6">
+
+    <h2 className="text-2xl font-bold mb-6">
+      Products by Category
+    </h2>
+
+    <ResponsiveContainer
+      width="100%"
+      height={300}
+    >
+
+      <PieChart>
+
+        <Pie
+          data={categoryAnalytics}
+          dataKey="totalProducts"
+          nameKey="_id"
+          outerRadius={110}
+          label
+        >
+
+          {categoryAnalytics.map((item,index)=>(
+
+            <Cell
+              key={index}
+              fill={[
+                "#06b6d4",
+                "#22c55e",
+                "#f97316",
+                "#8b5cf6",
+                "#ef4444",
+                "#14b8a6",
+              ][index % 6]}
+            />
+
+          ))}
+
+        </Pie>
+
+        <Tooltip />
+
+      </PieChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+</div>
+
+{/* ========================= */}
+{/* Low Stock */}
+{/* ========================= */}
+
+<div className="bg-white rounded-xl shadow p-6 mt-10">
+
+  <h2 className="text-2xl font-bold mb-5">
+    Low Stock Products
+  </h2>
+
+  {lowStockProducts.length===0 ? (
+
+    <p className="text-green-600">
+      No Low Stock Products 🎉
+    </p>
+
+  ) : (
+
+    lowStockProducts.map((product)=>(
+
+      <div
+        key={product._id}
+        className="flex justify-between border-b py-3"
+      >
+
+        <span>{product.name}</span>
+
+        <span className="font-bold text-red-600">
+          {product.stock}
+        </span>
+
+      </div>
+
+    ))
+
+  )}
+
+</div>
+{/* ========================= */}
+{/* Latest Data */}
+{/* ========================= */}
+
+<div className="grid lg:grid-cols-3 gap-8 mt-12">
+
+  {/* Latest Products */}
+
+  <div className="bg-white rounded-xl shadow p-6">
+
+    <h2 className="text-2xl font-bold mb-5">
+      Latest Products
+    </h2>
+
+    {latestProducts.length === 0 ? (
+
+      <p>No Products</p>
+
+    ) : (
+
+      latestProducts.map((product) => (
+
+        <div
+          key={product._id}
+          className="flex items-center gap-3 border-b py-3"
+        >
+
+          <img
+            src={
+              product.images?.[0] ||
+              "https://via.placeholder.com/60"
+            }
+            alt={product.name}
+            className="w-14 h-14 rounded-lg object-cover"
+          />
+
+          <div className="flex-1">
+
+            <h3 className="font-semibold">
+              {product.name}
+            </h3>
+
+            <p className="text-sm text-gray-500">
+              ₹{product.price}
+            </p>
 
           </div>
 
         </div>
 
-      </div>
+      ))
 
-    </div>
-  );
+    )}
+
+  </div>
+
+  {/* Latest Users */}
+
+  <div className="bg-white rounded-xl shadow p-6">
+
+    <h2 className="text-2xl font-bold mb-5">
+      Latest Users
+    </h2>
+
+    {latestUsers.length === 0 ? (
+
+      <p>No Users</p>
+
+    ) : (
+
+      latestUsers.map((user) => (
+
+        <div
+          key={user._id}
+          className="border-b py-3"
+        >
+
+          <h3 className="font-semibold">
+            {user.name}
+          </h3>
+
+          <p className="text-sm text-gray-500">
+            {user.email}
+          </p>
+
+          <span
+            className={`inline-block mt-2 px-3 py-1 rounded-full text-white text-xs ${
+              user.isAdmin
+                ? "bg-green-600"
+                : "bg-slate-600"
+            }`}
+          >
+            {user.isAdmin ? "Admin" : "User"}
+          </span>
+
+        </div>
+
+      ))
+
+    )}
+
+  </div>
+
+  {/* Latest Orders */}
+
+  <div className="bg-white rounded-xl shadow p-6">
+
+    <h2 className="text-2xl font-bold mb-5">
+      Latest Orders
+    </h2>
+
+    {latestOrders.length === 0 ? (
+
+      <p>No Orders</p>
+
+    ) : (
+
+      latestOrders.map((order) => (
+
+        <div
+          key={order._id}
+          className="border-b py-3"
+        >
+
+          <h3 className="font-semibold">
+            {order.shippingAddress?.fullName}
+          </h3>
+
+          <p className="text-sm text-gray-500">
+            {new Date(order.createdAt).toLocaleDateString("en-IN")}
+          </p>
+
+          <p className="font-bold text-cyan-600 mt-1">
+            ₹{Number(order.totalPrice).toLocaleString("en-IN")}
+          </p>
+
+          <span
+            className={`inline-block mt-2 px-3 py-1 rounded-full text-white text-xs ${
+              order.status === "Delivered"
+                ? "bg-green-600"
+                : order.status === "Cancelled"
+                ? "bg-red-600"
+                : "bg-yellow-500"
+            }`}
+          >
+            {order.status}
+          </span>
+
+        </div>
+
+      ))
+
+    )}
+
+  </div>
+
+</div>
+
+</div>
+
+</div>
+);
 }
 
 export default Dashboard;
