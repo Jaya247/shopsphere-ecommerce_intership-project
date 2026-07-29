@@ -36,14 +36,13 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Pre-save middleware to keep isAdmin in sync with role
 userSchema.pre("save", function (next) {
   if (this.role === "Admin") {
     this.isAdmin = true;
   } else {
     this.isAdmin = false;
   }
-  next();
+  if (typeof next === "function") next();
 });
 
 const User = mongoose.model("User", userSchema);
