@@ -11,6 +11,9 @@ import userRoutes from "./routes/userRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
+import sellerRoutes from "./routes/sellerRoutes.js";
+import couponRoutes from "./routes/couponRoutes.js";
 
 dotenv.config();
 
@@ -48,6 +51,12 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/upload", uploadRoutes);
 
 app.use("/api/payment", paymentRoutes);
+
+app.use("/api/ai", aiRoutes);
+
+app.use("/api/seller", sellerRoutes);
+
+app.use("/api/coupons", couponRoutes);
 
 // ===============================
 // Home Route

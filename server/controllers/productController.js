@@ -32,6 +32,7 @@ export const addProduct = async (req, res) => {
       numReviews,
       images,
       featured,
+      seller: req.user ? req.user._id : null,
     });
 
     res.status(201).json({

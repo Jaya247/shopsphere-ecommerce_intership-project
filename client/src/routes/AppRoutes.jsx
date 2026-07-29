@@ -14,6 +14,7 @@ import Profile from "../pages/Profile";
 import MyOrders from "../pages/MyOrders";
 import OrderDetails from "../pages/OrderDetails";
 import NotFound from "../pages/NotFound";
+import OutfitGenerator from "../pages/OutfitGenerator";
 
 // Admin Pages
 import Dashboard from "../pages/admin/Dashboard";
@@ -22,6 +23,8 @@ import AddProduct from "../pages/admin/AddProduct";
 import EditProduct from "../pages/admin/EditProduct";
 import AdminOrders from "../pages/admin/Orders";
 import AdminUsers from "../pages/admin/Users";
+import ManageCoupons from "../pages/admin/ManageCoupons";
+import SellerDashboard from "../pages/seller/SellerDashboard";
 
 function AppRoutes() {
   return (
@@ -104,6 +107,15 @@ function AppRoutes() {
       />
 
       <Route
+        path="/outfit-generator"
+        element={
+          <MainLayout>
+            <OutfitGenerator />
+          </MainLayout>
+        }
+      />
+
+      <Route
         path="/profile"
         element={
           <MainLayout>
@@ -164,8 +176,27 @@ function AppRoutes() {
       />
 
       <Route
+        path="/admin/orders/:id"
+        element={
+          <MainLayout>
+            <OrderDetails />
+          </MainLayout>
+        }
+      />
+
+      <Route
         path="/admin/users"
         element={<AdminUsers />}
+      />
+
+      <Route
+        path="/admin/coupons"
+        element={<ManageCoupons />}
+      />
+
+      <Route
+        path="/seller/dashboard"
+        element={<SellerDashboard />}
       />
 
       {/* ========================= */}

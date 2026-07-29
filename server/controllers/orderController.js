@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import Order from "../models/Order.js";
+import User from "../models/User.js";
+import Product from "../models/Product.js";
 
 // ======================================
 // Place Order
@@ -257,5 +259,151 @@ export const deleteOrder = async (req, res) => {
       success: false,
       message: error.message,
     });
+  }
+};
+
+// ======================================
+// Request Return / Exchange (Customer)
+// ======================================
+export const requestOrderReturn = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { action, reason, images } = req.body;
+
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order Not Found" });
+    }
+
+    order.returnRequest = {
+      status: "Requested",
+      action: action || "Return",
+      reason: reason || "",
+      images: images || [],
+    };
+
+    // If it's a direct cancellation before dispatch, we can approve automatically
+    if (action === "Cancel" && order.status === "Pending") {
+      order.returnRequest.status = "Completed";
+      order.status = "Cancelled";
+      if (order.isPaid) {
+        order.refundRequest = {
+          status: "Approved",
+          reason: "Auto-approved refund for cancellation",
+        };
+      }
+    }
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: action === "Cancel" ? "Order Cancelled successfully" : "Return request submitted successfully",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ======================================
+// Request Refund (Customer)
+// ======================================
+export const requestOrderRefund = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order Not Found" });
+    }
+
+    order.refundRequest = {
+      status: "Requested",
+      reason: reason || "",
+    };
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Refund request submitted successfully",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ======================================
+// Process Return / Exchange (Admin / Seller)
+// ======================================
+export const processOrderReturn = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body; // Approved, Completed, Rejected
+
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order Not Found" });
+    }
+
+    order.returnRequest.status = status;
+
+    if (status === "Completed") {
+      if (order.returnRequest.action === "Return") {
+        // Automatically request a refund if user paid online or COD refund approval
+        order.refundRequest.status = "Approved";
+        order.refundRequest.reason = "Approved after product return verification";
+      } else if (order.returnRequest.action === "Exchange") {
+        // Create an exchange delivery status
+        order.status = "Processing";
+        order.returnRequest.status = "Completed";
+      }
+    }
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Return request marked as ${status}`,
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// ======================================
+// Process Refund (Admin / Seller) - Simulates Razorpay Refund API
+// ======================================
+export const processOrderRefund = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body; // Approved, Refunded, Rejected
+
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order Not Found" });
+    }
+
+    order.refundRequest.status = status;
+
+    if (status === "Refunded") {
+      // Simulate Razorpay Refund API Call Success
+      order.refundRequest.refundId = "REF_RPAY_" + Math.random().toString(36).substr(2, 9).toUpperCase();
+      order.isPaid = false; // Flag status as refunded (reverted payment)
+    }
+
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: `Refund status processed: ${status}`,
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

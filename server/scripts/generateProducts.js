@@ -16,15 +16,15 @@ const brands = {
 
 const imageMap = {
   Mobiles:
-    "https://dummyjson.com/image/600x600/008080/ffffff?text=Mobile",
+    "https://placehold.co/600x600/008080/ffffff?text=Mobile",
   Laptops:
-    "https://dummyjson.com/image/600x600/0d6efd/ffffff?text=Laptop",
+    "https://placehold.co/600x600/0d6efd/ffffff?text=Laptop",
   Watches:
-    "https://dummyjson.com/image/600x600/6f42c1/ffffff?text=Watch",
+    "https://placehold.co/600x600/6f42c1/ffffff?text=Watch",
   Shoes:
-    "https://dummyjson.com/image/600x600/f97316/ffffff?text=Shoes",
+    "https://placehold.co/600x600/f97316/ffffff?text=Shoes",
   Clothing:
-    "https://dummyjson.com/image/600x600/198754/ffffff?text=Clothing",
+    "https://placehold.co/600x600/198754/ffffff?text=Clothing",
 };
 
 const categories = Object.keys(brands);

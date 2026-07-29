@@ -53,7 +53,7 @@ function ProductCard({ product }) {
             className="h-full w-full object-contain p-4"
             onError={(e) => {
               e.target.src =
-                "https://via.placeholder.com/250x250?text=No+Image";
+                "https://placehold.co/250x250?text=No+Image";
             }}
           />
         </div>

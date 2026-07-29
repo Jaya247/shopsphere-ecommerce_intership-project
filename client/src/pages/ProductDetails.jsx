@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 import API from "../api/axios";
 
 import { addToCart } from "../redux/slices/cartSlice";
@@ -32,6 +33,7 @@ function ProductDetails() {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to load product details");
     } finally {
       setLoading(false);
     }
@@ -46,14 +48,14 @@ function ProductDetails() {
       })
     );
 
-    alert("✅ Product Added To Cart");
+    toast.success("Added to Cart! 🛒");
   };
 
   // Wishlist
   const addWishlistHandler = () => {
     dispatch(addToWishlist(product));
 
-    alert("❤️ Product Added To Wishlist");
+    toast.success("Added to Wishlist! ❤️");
   };
 
   // Buy Now
@@ -70,166 +72,157 @@ function ProductDetails() {
 
   if (loading) {
     return (
-      <div className="text-center py-20 text-2xl">
-        Loading Product...
+      <div className="text-center py-20 text-2xl font-bold dark:text-white transition animate-pulse">
+        Loading Product Details...
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="text-center py-20 text-2xl">
-        Product Not Found
+      <div className="text-center py-20 text-2xl font-bold text-red-500">
+        Product Not Found 😔
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
+    <div className="max-w-7xl mx-auto px-6 py-12 min-h-[80vh] transition duration-300">
 
       <div className="grid md:grid-cols-2 gap-10">
 
         {/* Images */}
-
         <div>
 
-          <div className="bg-white rounded-xl shadow p-5">
-
+          <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl shadow-xl p-5 transition duration-300">
             <img
               src={selectedImage}
               alt={product.name}
-              className="w-full h-[450px] object-contain"
+              className="w-full h-[450px] object-contain rounded-xl"
             />
-
           </div>
 
-          <div className="flex gap-3 mt-5">
-
+          <div className="flex gap-3 mt-5 overflow-x-auto pb-2">
             {product.images.map((img, index) => (
-
               <img
                 key={index}
                 src={img}
                 alt=""
                 onClick={() => setSelectedImage(img)}
-                className={`w-20 h-20 rounded-lg border cursor-pointer object-cover ${
+                className={`w-20 h-20 rounded-xl border-2 cursor-pointer object-cover shrink-0 transition ${
                   selectedImage === img
-                    ? "border-cyan-500"
-                    : "border-gray-300"
+                    ? "border-cyan-500 shadow-md"
+                    : "border-gray-300 dark:border-slate-700"
                 }`}
               />
-
             ))}
-
           </div>
 
         </div>
 
         {/* Details */}
-
         <div>
 
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-4xl font-extrabold text-slate-850 dark:text-white leading-tight">
             {product.name}
           </h1>
 
-          <p className="mt-3 text-gray-500">
+          <p className="mt-3 text-slate-500 dark:text-slate-400">
             Brand :
-            <span className="font-semibold ml-2">
+            <span className="font-bold ml-2 text-slate-800 dark:text-slate-200">
               {product.brand}
             </span>
           </p>
 
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-slate-500 dark:text-slate-400">
             Category :
-            <span className="font-semibold ml-2">
+            <span className="font-bold ml-2 text-slate-800 dark:text-slate-200">
               {product.category}
             </span>
           </p>
 
-          <div className="flex items-center mt-4 text-lg">
-
+          <div className="flex items-center mt-4 text-base text-yellow-500 font-semibold">
             ⭐ {product.rating}
-
-            <span className="ml-3 text-gray-500">
+            <span className="ml-3 text-slate-500 dark:text-slate-400 text-sm font-normal">
               ({product.numReviews} Reviews)
             </span>
-
           </div>
 
-          <h2 className="text-4xl font-bold text-cyan-600 mt-6">
+          <div className="flex items-baseline gap-4 mt-6">
+            <h2 className="text-4xl font-extrabold text-cyan-600 dark:text-cyan-400">
+              ₹{Number(product.price).toLocaleString("en-IN")}
+            </h2>
+            {product.discount > 0 && (
+              <span className="bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-400 text-xs font-bold px-2.5 py-1 rounded-full">
+                {product.discount}% OFF
+              </span>
+            )}
+          </div>
 
-            ₹{Number(product.price).toLocaleString("en-IN")}
-
-          </h2>
-
-          <p className="text-red-500 mt-2">
-
-            {product.discount}% OFF
-
-          </p>
-
-          <p className="mt-6 leading-8 text-gray-600">
-
+          <p className="mt-6 leading-relaxed text-slate-600 dark:text-slate-300">
             {product.description}
-
           </p>
 
-          <p className="mt-6">
-
+          <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">
             Stock :
-
             <span
-              className={`font-bold ml-2 ${
+              className={`font-bold ml-2 text-base ${
                 product.stock > 0
-                  ? "text-green-600"
-                  : "text-red-600"
+                  ? "text-green-600 dark:text-green-400"
+                  : "text-red-600 dark:text-red-400"
               }`}
             >
               {product.stock > 0
                 ? `${product.stock} Available`
                 : "Out Of Stock"}
             </span>
-
           </p>
 
-          <div className="mt-8 flex items-center gap-5">
+          {product.stock > 0 && (
+            <div className="mt-8 flex items-center gap-5">
+              <span className="text-slate-700 dark:text-slate-300 font-semibold">Quantity</span>
+              <input
+                type="number"
+                min="1"
+                max={product.stock}
+                value={quantity}
+                onChange={(e) =>
+                  setQuantity(Math.max(1, Math.min(product.stock, Number(e.target.value))))
+                }
+                className="w-20 border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg p-2 outline-none text-center focus:border-cyan-500 transition"
+              />
+            </div>
+          )}
 
-            <span>Qty</span>
-
-            <input
-              type="number"
-              min="1"
-              max={product.stock}
-              value={quantity}
-              onChange={(e) =>
-                setQuantity(Number(e.target.value))
-              }
-              className="w-20 border rounded-lg p-2"
-            />
-
-          </div>
-                    <div className="flex gap-5 mt-10">
-
+          <div className="flex flex-col sm:flex-row gap-5 mt-10">
             <button
               onClick={addCartHandler}
-              className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white py-4 rounded-xl font-semibold transition"
+              disabled={product.stock === 0}
+              className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl font-bold transition shadow cursor-pointer ${
+                product.stock === 0
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-cyan-500 hover:bg-cyan-600 text-white"
+              }`}
             >
               🛒 Add To Cart
             </button>
 
             <button
               onClick={buyNowHandler}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-semibold transition"
+              disabled={product.stock === 0}
+              className={`flex-1 py-4 rounded-xl font-bold transition shadow cursor-pointer ${
+                product.stock === 0
+                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  : "bg-green-600 hover:bg-green-750 text-white dark:bg-green-700 dark:hover:bg-green-600"
+              }`}
             >
               Buy Now
             </button>
-
           </div>
 
           <button
             onClick={addWishlistHandler}
-            className="mt-5 w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-xl font-semibold transition"
+            className="mt-5 w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-xl font-bold transition shadow cursor-pointer"
           >
             ❤️ Add To Wishlist
           </button>

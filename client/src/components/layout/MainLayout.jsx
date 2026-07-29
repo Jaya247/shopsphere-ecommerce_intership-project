@@ -1,5 +1,6 @@
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import AIChatbot from "../common/AIChatbot";
 
 function MainLayout({ children }) {
   return (
@@ -7,6 +8,7 @@ function MainLayout({ children }) {
       <Navbar />
 
       <main
+        className="bg-gray-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition duration-300"
         style={{
           minHeight: "80vh",
           padding: "30px",
@@ -14,6 +16,8 @@ function MainLayout({ children }) {
       >
         {children}
       </main>
+
+      <AIChatbot />
 
       <Footer />
     </>

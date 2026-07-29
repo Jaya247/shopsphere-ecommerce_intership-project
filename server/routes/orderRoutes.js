@@ -1,5 +1,5 @@
 import express from "express";
-
+import { protect, isSeller } from "../middleware/authMiddleware.js";
 import {
   placeOrder,
   getOrders,
@@ -8,43 +8,31 @@ import {
   updateOrderStatus,
   updatePaymentStatus,
   deleteOrder,
+  requestOrderReturn,
+  requestOrderRefund,
+  processOrderReturn,
+  processOrderRefund,
 } from "../controllers/orderController.js";
 
 const router = express.Router();
 
-// ======================================
-// Place Order
-// ======================================
+// Apply auth protect generally on orders
+router.use(protect);
+
 router.post("/", placeOrder);
-
-// ======================================
-// My Orders (Logged In User)
-// ======================================
 router.get("/my-orders/:userId", getMyOrders);
-
-// ======================================
-// Get All Orders (Admin)
-// ======================================
 router.get("/", getOrders);
-
-// ======================================
-// Get Single Order
-// ======================================
 router.get("/:id", getOrderById);
-
-// ======================================
-// Update Order Status
-// ======================================
 router.put("/:id/status", updateOrderStatus);
-
-// ======================================
-// Update Payment Status
-// ======================================
 router.put("/:id/pay", updatePaymentStatus);
+router.delete("/:id", deleteOrder);
 
 // ======================================
-// Delete Order
+// New Return & Refund Management Routes
 // ======================================
-router.delete("/:id", deleteOrder);
+router.post("/:id/return", requestOrderReturn);
+router.post("/:id/refund", requestOrderRefund);
+router.put("/:id/return-process", isSeller, processOrderReturn);
+router.put("/:id/refund-process", isSeller, processOrderRefund);
 
 export default router;

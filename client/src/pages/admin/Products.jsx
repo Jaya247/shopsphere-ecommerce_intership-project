@@ -104,13 +104,13 @@ const deleteProduct = async (id) => {
                   <img
                    src={
                   product.images?.[0] ||
-                 "https://via.placeholder.com/80?text=No+Image"
+                 "https://placehold.co/80?text=No+Image"
                  }
                    alt={product.name}
                  className="w-16 h-16 object-contain rounded"
                   onError={(e) => {
                    e.target.src =
-                 "https://via.placeholder.com/80?text=No+Image";
+                 "https://placehold.co/80?text=No+Image";
                   }}
                 />
 

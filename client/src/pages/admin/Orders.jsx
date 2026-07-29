@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import API from "../../api/axios";
 
 function Orders() {
@@ -182,14 +182,12 @@ function Orders() {
 
                 <td className="p-4 flex justify-center gap-2">
 
-                  <button
-                    onClick={() =>
-                      navigate(`/admin/orders/${order._id}`)
-                    }
-                    className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg"
+                  <Link
+                    to={`/admin/orders/${order._id}`}
+                    className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg inline-block text-xs font-bold"
                   >
                     View
-                  </button>
+                  </Link>
 
                   <button
                     onClick={() => deleteOrder(order._id)}

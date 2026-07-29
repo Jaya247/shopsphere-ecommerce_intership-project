@@ -75,15 +75,21 @@ export const updateUserRole = async (req, res) => {
       });
     }
 
-    user.isAdmin = !user.isAdmin;
+    const { role } = req.body;
+    if (role) {
+      user.role = role;
+      // Pre-save hook will automatically sync isAdmin if role === 'Admin'
+    } else {
+      // Toggle admin status if no role passed (for backward compatibility)
+      user.isAdmin = !user.isAdmin;
+      user.role = user.isAdmin ? "Admin" : "User";
+    }
 
     await user.save();
 
     res.status(200).json({
       success: true,
-      message: user.isAdmin
-        ? "User promoted to Admin"
-        : "Admin removed successfully",
+      message: `User role updated successfully to ${user.role}`,
       user,
     });
   } catch (error) {

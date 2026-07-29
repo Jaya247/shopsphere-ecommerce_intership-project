@@ -85,6 +85,45 @@ const orderSchema = new mongoose.Schema(
       ],
       default: "Pending",
     },
+
+    // ======================================
+    // New Fields for Expansion
+    // ======================================
+    deliveryPartner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+
+    deliveryLocation: {
+      lat: { type: Number, default: 28.6139 }, // Default to New Delhi coordinates
+      lng: { type: Number, default: 77.2090 },
+      liveStatus: { type: String, default: "Order Placed" },
+    },
+
+    refundRequest: {
+      status: {
+        type: String,
+        enum: ["None", "Requested", "Approved", "Refunded", "Rejected"],
+        default: "None",
+      },
+      reason: { type: String, default: "" },
+      refundId: { type: String, default: "" },
+    },
+
+    returnRequest: {
+      status: {
+        type: String,
+        enum: ["None", "Requested", "Approved", "Completed", "Rejected"],
+        default: "None",
+      },
+      reason: { type: String, default: "" },
+      action: {
+        type: String,
+        enum: ["Return", "Exchange", "Cancel"],
+        default: "Return",
+      },
+      images: [{ type: String }],
+    },
   },
   {
     timestamps: true,

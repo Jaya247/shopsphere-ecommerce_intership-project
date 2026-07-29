@@ -31,8 +31,8 @@ function Categories() {
 
   if (loading) {
     return (
-      <section className="py-16 bg-white">
-        <div className="text-center text-2xl font-semibold">
+      <section className="py-16 bg-white dark:bg-slate-950 transition duration-300">
+        <div className="text-center text-2xl font-semibold text-slate-800 dark:text-slate-100 animate-pulse">
           Loading Categories...
         </div>
       </section>
@@ -40,10 +40,10 @@ function Categories() {
   }
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white dark:bg-slate-950 transition duration-300">
       <div className="max-w-7xl mx-auto px-5">
 
-        <h2 className="text-4xl font-bold text-center mb-10">
+        <h2 className="text-4xl font-extrabold text-center mb-10 text-slate-800 dark:text-white">
           Shop By Category
         </h2>
 
@@ -54,17 +54,17 @@ function Categories() {
               key={category._id}
               to={`/products?category=${category._id}`}
             >
-              <div className="bg-gray-100 rounded-xl p-8 text-center cursor-pointer hover:bg-cyan-500 hover:text-white transition duration-300 shadow-md">
+              <div className="bg-gray-100 dark:bg-slate-900 border border-transparent dark:border-slate-800 rounded-xl p-8 text-center cursor-pointer hover:bg-cyan-500 dark:hover:bg-cyan-600 hover:text-white dark:hover:text-white transition duration-300 shadow-md">
 
                 <div className="text-5xl mb-4">
                   {categoryIcons[category._id] || "🛍️"}
                 </div>
 
-                <h3 className="text-xl font-bold">
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white hover:text-inherit">
                   {category._id}
                 </h3>
 
-                <p className="mt-2 text-sm">
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                   {category.count} Products
                 </p>
 

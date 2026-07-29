@@ -1,5 +1,5 @@
 import express from "express";
-
+import { protect, isSeller } from "../middleware/authMiddleware.js";
 import {
   addProduct,
   getProducts,
@@ -19,26 +19,18 @@ const router = express.Router();
 // Special Routes
 // =============================
 router.get("/featured", getFeaturedProducts);
-
 router.get("/new", getNewArrivals);
-
 router.get("/bestsellers", getBestSellers);
-
 router.get("/search", searchProducts);
-
 router.get("/categories", getCategories);
 
 // =============================
 // CRUD Routes
 // =============================
-router.post("/", addProduct);
-
+router.post("/", protect, isSeller, addProduct);
 router.get("/", getProducts);
-
 router.get("/:id", getProductById);
-
-router.put("/:id", updateProduct);
-
-router.delete("/:id", deleteProduct);
+router.put("/:id", protect, isSeller, updateProduct);
+router.delete("/:id", protect, isSeller, deleteProduct);
 
 export default router;
