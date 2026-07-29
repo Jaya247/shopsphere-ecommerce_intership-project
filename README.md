@@ -1,127 +1,82 @@
 # 🛒 ShopSphere
 
 <p align="center">
+  <img src="https://img.shields.io/badge/MERN-Stack-blue.svg" alt="MERN Stack">
+  <img src="https://img.shields.io/badge/React-18-cyan.svg" alt="React">
+  <img src="https://img.shields.io/badge/Tailwind-CSS-38bdf8.svg" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/AI-Stylist-purple.svg" alt="AI Stylist">
+  <img src="https://img.shields.io/badge/Status-Completed-success.svg" alt="Status">
+</p>
 
-### A Full-Featured MERN Stack E-Commerce Platform
-
-Modern • Secure • Scalable • Responsive
-
+<p align="center">
+  <h3>A Premium, Full-Featured MERN Stack E-Commerce & AI Fashion Wardrobe Platform</h3>
+  Modern • Secure • Scalable • Responsive • AI-Enabled
 </p>
 
 ---
 
 ## 📌 About
 
-ShopSphere is a modern MERN Stack E-Commerce Platform developed as a Major Project.
+**ShopSphere** is a state-of-the-art MERN Stack E-Commerce Platform developed as a Major Project. It merges traditional retail with modern AI-driven fashion styling tools.
 
-The project aims to provide a complete online shopping experience with secure authentication, product management, shopping cart, wishlist, payment gateway integration, order tracking, reviews, coupons, and an analytics-powered admin dashboard.
+The project delivers a complete dapper online shopping experience. It includes secure JWT-based multi-role authentication, product catalog filters, shopping carts, wishlists, expected delivery estimators, return/exchange management, invoices, and a Recharts-powered admin dashboard.
 
 ---
 
-# ✨ Features
+# ✨ Core Features
+
+### 👗 AI Outfit Stylist (Fashion)
+*   **Custom Shirt Configurator**: Select presets (Linen, Oxford, Denim) or upload your own shirts.
+*   **Gemini AI Recommendations**: Dynamically recommends color-matched jeans, shoes, watches, and sunglasses combos.
+*   **Local Styling Fallbacks**: Integrated local expert stylist matching index for instant offline recommendations.
+*   **Single-Click Cart Adds**: Add recommended accessory items directly to the shopping cart.
 
 ### 👤 User Module
-
-- User Registration
-- Login & Logout
-- JWT Authentication
-- Forgot Password
-- User Profile
-- Address Management
-
----
+*   **Role Management Dashboard**: Toggle accounts between `User`, `Seller`, `Manager`, `Admin`, and `Delivery Partner`.
+*   **Animated Visual Interfaces**: Keyframe-controlled floating blobs background overlays, text gradients, and interactive glassmorphic cards.
+*   **Profile & Address Book**: Detailed settings page with editable billing details.
 
 ### 🛍 Product Module
+*   **Database Product Images**: Real brand-appropriate high-resolution Unsplash product visual mappings for 500 catalog items (laptops, phones, clothing, accessories).
+*   **Filters & Search**: Fast multi-faceted filters, category queries, price caps, and sorting options.
+*   **🎙️ Voice Search Integration**: HTML Speech Recognition microphone input inside the header search bar.
 
-- Product Listing
-- Product Details
-- Categories
-- Search
-- Filters
-- Sorting
+### 🏷 Advanced Coupon Engine
+*   **Percentage & Flat Discounts**: Dynamic value deductions on order totals.
+*   **Buy One Get One (BOGO)**: Auto-calculates a free unit of the highest eligible item for qualifying cart sets.
+*   **Admin Management Grid**: Panel to review active promo codes, set minimum purchase caps, and create new campaigns.
 
----
+### 💳 Shopping & Checkout
+*   **Frosted Glassmorphic Header**: Interactive header cover with auto-changing retail backgrounds on refresh.
+*   **Left Sidebar Drawer**: Hamburger-toggled navigation slider for Home, Products, Modes, Cart, and My Orders.
+*   **Order Delivery Estimator**: Deterministic unique expected delivery times calculated within a 5-day window.
 
-### 🛒 Shopping Module
+### 📦 Orders & Returns System
+*   **Return, Exchange, & Cancellation**: Post-delivery options including custom reasons and mock product photo upload verification.
+*   **GST Invoice generation**: Client-side PDF tax invoice generation and download utilizing jsPDF.
+*   **Visual Track Panel**: Real-time checkpoints progress tracker based on order shipping state.
 
-- Shopping Cart
-- Wishlist
-- Coupon System
-- Checkout
-
----
-
-### 💳 Payment
-
-- Razorpay Integration
-- Secure Checkout
-- Order Confirmation
-
----
-
-### 📦 Orders
-
-- Order History
-- Order Tracking
-- Cancel Order
-- Invoice
-
----
-
-### ⭐ Reviews
-
-- Product Reviews
-- Ratings
-
----
-
-### 👨‍💼 Admin Dashboard
-
-- Dashboard Analytics
-- Product Management
-- Category Management
-- User Management
-- Order Management
-- Coupon Management
-- Sales Reports
+### 👨‍💼 Admin & Seller Dashboards
+*   **Recharts Analytics**: 6 distinct charts (Area, Bar, Line, Pie) detailing total sales, product categories, and monthly order counts.
+*   **Multi-Vendor Marketplace**: Dedicated dashboards for Sellers to manage product catalogs and track store statistics.
 
 ---
 
 # 🛠 Tech Stack
 
-## Frontend
+### Frontend
+*   **React** (v18)
+*   **Redux Toolkit** (State Management)
+*   **Tailwind CSS** & **Vanilla CSS**
+*   **jsPDF** (Invoice Generation)
+*   **Recharts** (Interactive Analytics)
+*   **Axios** (Request Interceptors for Auth Headers)
 
-- React
-- Redux Toolkit
-- Tailwind CSS
-- Axios
-
-## Backend
-
-- Node.js
-- Express.js
-
-## Database
-
-- MongoDB Atlas
-
-## Authentication
-
-- JWT
-- bcrypt.js
-
-## Cloud
-
-- Cloudinary
-
-## Payment
-
-- Razorpay
-
-## Deployment
-
-- Vercel
-- Render
+### Backend & Database
+*   **Node.js** & **Express.js** (Server Logic)
+*   **MongoDB Atlas** (Database)
+*   **Mongoose** (Schema Modeling)
+*   **Gemini 1.5 Flash API** (AI Styling Content Generation)
 
 ---
 
@@ -129,60 +84,61 @@ The project aims to provide a complete online shopping experience with secure au
 
 ```
 shopsphere-ecommerce/
-
-client/
-
-server/
-
-docs/
-
-database/
-
-assets/
-
-postman/
+├── client/          # Frontend React Application
+│   ├── public/      # Static Assets & Images
+│   └── src/         # Source code (Pages, Components, Redux)
+├── server/          # Backend Express Server
+│   ├── config/      # DB Connections
+│   ├── controllers/ # Business Logic & AI Engines
+│   ├── data/        # Seed datasets
+│   ├── models/      # Mongoose Schemas (User, Product, Order, Coupon)
+│   ├── routes/      # REST API Endpoints
+│   └── scripts/     # Database Migration & Testing tools
 ```
 
 ---
 
-# 🚀 Installation
+# 🚀 Quick Installation
 
-### Clone Repository
-
+### 1. Clone & Env Setup
 ```bash
 git clone https://github.com/piyushdubey26/shopsphere-ecommerce.git
+cd shopsphere-ecommerce
+```
+Create a `.env` in `server/`:
+```env
+PORT=5001
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
-### Frontend
-
-```bash
-cd client
-
-npm install
-
-npm run dev
-```
-
-### Backend
-
+### 2. Run Database Seeding & Migration
 ```bash
 cd server
-
 npm install
-
-npm run dev
+node seeder.js
+node scripts/updateProductImages.js
 ```
+
+### 3. Launch Development Servers
+*   **Backend Server**:
+    ```bash
+    cd server
+    npm run dev
+    ```
+*   **Frontend Client**:
+    ```bash
+    cd client
+    npm install
+    npm run dev
+    ```
 
 ---
 
-# 📌 Upcoming Features
+# 📅 Project Status
 
-- AI Product Recommendation
-- Voice Search
-- Multi Vendor Support
-- Chat Support
-- Dark Mode
-- PWA Support
+**✅ Completed / Active Release**
 
 ---
 
@@ -190,47 +146,12 @@ npm run dev
 
 | Name | Role |
 |------|------|
-| Piyush Dubey | Team Leader / Full Stack Developer |
-| Sakshi Kumari |Backend Developer |
-| Jaya Maurya | Frontend Developer |
-| Shubham Singh | Database & API Developer |
-| Priya Goswami | Testing & Documentation |
+| **Piyush Dubey** | Team Leader / Full Stack Developer |
+| **Sakshi Kumari** | Backend Developer |
+| **Jaya Maurya** | Frontend Developer |
+| **Shubham Singh** | Database & API Developer |
+| **Priya Goswami** | Testing & Documentation |
 
 ---
 
-# 📅 Project Status
-
-🚧 Currently in Development
-
----
-
-# 📖 Documentation
-
-Project documentation is available inside the **docs/** directory.
-
-- Proposal
-- Synopsis
-- SRS
-- Report
-- PPT
-- Meeting Notes
-
----
-
-# 🤝 Contribution
-
-1. Fork Repository
-2. Create Feature Branch
-3. Commit Changes
-4. Push Branch
-5. Create Pull Request
-
----
-
-# 📜 License
-
-This project is developed for educational purposes as a Major Project.
-
----
-
-## ⭐ If you like this project, don't forget to star the repository.
+## ⭐ Star the repository if you love this project!
