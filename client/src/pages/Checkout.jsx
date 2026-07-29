@@ -23,8 +23,17 @@ function Checkout() {
     pincode: "",
   });
 
+useEffect(() => {
+  const savedAddress = localStorage.getItem("shippingAddress");
+
+  if (savedAddress) {
+    setAddress(JSON.parse(savedAddress));
+  }
+}, []);
+
   const [paymentMethod, setPaymentMethod] =
     useState("COD");
+
 
   // ===========================
   // Load Razorpay Script
@@ -113,7 +122,10 @@ function Checkout() {
 
           order_id:
             data.order.id,
-                      handler: async function (response) {
+
+          handler: async function (
+            response
+          ) {
             try {
               await API.post(
                 "/payment/verify-payment",
@@ -174,21 +186,28 @@ function Checkout() {
         );
       }
     };
-
-  // ===========================
+      // ===========================
   // Place Order
   // ===========================
 
   const placeOrder = async () => {
-    const loginData = JSON.parse(
-      localStorage.getItem("user")
-    );
+  // Save Address
+  localStorage.setItem(
+    "shippingAddress",
+    JSON.stringify(address)
+  );
 
-    if (!loginData) {
-      alert("Please Login First");
-      navigate("/login");
-      return;
-    }
+  const loginData = JSON.parse(
+    localStorage.getItem("user")
+  );
+
+  if (!loginData) {
+    alert("Please Login First");
+    navigate("/login");
+    return;
+  }
+
+  
 
     const userId =
       loginData?._id ||
@@ -229,34 +248,31 @@ function Checkout() {
     try {
       setPlacingOrder(true);
 
-      const { data } =
-        await API.post("/orders", {
-          user: userId,
+      const { data } = await API.post("/orders", {
+        user: userId,
 
-          orderItems: cartItems.map(
-            (item) => ({
-              product: item._id,
-              name: item.name,
-              image:
-                item.images?.[0] || "",
-              price: item.price,
-              quantity: item.quantity,
-            })
-          ),
+        orderItems: cartItems.map((item) => ({
+          product: item._id,
+          name: item.name,
+          image: item.images?.[0] || "",
+          price: item.price,
+          quantity: item.quantity,
+        })),
 
-          shippingAddress: address,
+        shippingAddress: address,
 
-          paymentMethod,
+        paymentMethod,
 
-          itemsPrice: subtotal,
+        itemsPrice: subtotal,
 
-          shippingPrice: shipping,
+        shippingPrice: shipping,
 
-          taxPrice: tax,
+        taxPrice: tax,
 
-          totalPrice: total,
-        });
-              const order = data.order;
+        totalPrice: total,
+      });
+
+      const order = data.order;
 
       if (paymentMethod === "Razorpay") {
         await handleRazorpayPayment(
@@ -283,205 +299,240 @@ function Checkout() {
   };
 
   return (
-    <div className="container py-5">
-      <div className="row">
-        {/* Shipping Details */}
+    <div className="max-w-7xl mx-auto px-6 py-10">
 
-        <div className="col-lg-7 mb-4">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h3 className="mb-4">
-                Shipping Address
-              </h3>
+      <h1 className="text-4xl font-bold mb-10">
+        Checkout
+      </h1>
 
-              <div className="row">
-                <div className="col-md-6 mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Full Name"
-                    name="fullName"
-                    value={address.fullName}
-                    onChange={handleChange}
-                  />
-                </div>
+      <div className="grid lg:grid-cols-3 gap-8">
 
-                <div className="col-md-6 mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Phone"
-                    name="phone"
-                    value={address.phone}
-                    onChange={handleChange}
-                  />
-                </div>
+        {/* Shipping */}
 
-                <div className="col-md-6 mb-3">
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder="Email"
-                    name="email"
-                    value={address.email}
-                    onChange={handleChange}
-                  />
-                </div>
+        <div className="lg:col-span-2 bg-white shadow rounded-xl p-8">
 
-                <div className="col-md-6 mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Pincode"
-                    name="pincode"
-                    value={address.pincode}
-                    onChange={handleChange}
-                  />
-                </div>
+          <h2 className="text-2xl font-bold mb-6">
+            Shipping Address
+          </h2>
 
-                <div className="col-12 mb-3">
-                  <textarea
-                    className="form-control"
-                    rows="3"
-                    placeholder="Full Address"
-                    name="address"
-                    value={address.address}
-                    onChange={handleChange}
-                  ></textarea>
-                </div>
+          <div className="grid md:grid-cols-2 gap-5">
 
-                <div className="col-md-6 mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="City"
-                    name="city"
-                    value={address.city}
-                    onChange={handleChange}
-                  />
-                </div>
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Full Name"
+              value={address.fullName}
+              onChange={handleChange}
+              className="border rounded-lg p-3"
+            />
 
-                <div className="col-md-6 mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="State"
-                    name="state"
-                    value={address.state}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
+            <input
+             type="tel"
+             name="phone"
+             placeholder="Phone"
+             value={address.phone}
+             maxLength={10}
+             onChange={(e) => {
+             const value = e.target.value.replace(/\D/g, "").slice(0, 10);
 
-              <h5 className="mt-4 mb-3">
-                Payment Method
-              </h5>
-
-              <div className="form-check mb-2">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  id="cod"
-                  checked={
-                    paymentMethod === "COD"
-                  }
-                  onChange={() =>
-                    setPaymentMethod("COD")
-                  }
+             setAddress({
+               ...address,
+               phone: value,
+                });
+            }}
+                 className="w-full border rounded-lg p-3"
                 />
 
-                <label
-                  className="form-check-label"
-                  htmlFor="cod"
-                >
-                  Cash On Delivery
-                </label>
-              </div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={address.email}
+              onChange={handleChange}
+              className="border rounded-lg p-3 md:col-span-2"
+            />
 
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  id="razorpay"
-                  checked={
-                    paymentMethod ===
-                    "Razorpay"
-                  }
-                  onChange={() =>
-                    setPaymentMethod(
-                      "Razorpay"
-                    )
-                  }
-                />
+            <textarea
+              rows="4"
+              name="address"
+              placeholder="Full Address"
+              value={address.address}
+              onChange={handleChange}
+              className="border rounded-lg p-3 md:col-span-2"
+            />
 
-                <label
-                  className="form-check-label"
-                  htmlFor="razorpay"
-                >
-                  Razorpay
-                </label>
-              </div>
-            </div>
+            <input
+              type="text"
+              name="city"
+              placeholder="City"
+              value={address.city}
+              onChange={handleChange}
+              className="border rounded-lg p-3"
+            />
+
+            <input
+              type="text"
+              name="state"
+              placeholder="State"
+              value={address.state}
+              onChange={handleChange}
+              className="border rounded-lg p-3"
+            />
+
+            <input
+              type="text"
+              name="pincode"
+              placeholder="Pincode"
+              value={address.pincode}
+              onChange={handleChange}
+              className="border rounded-lg p-3"
+            />
+
           </div>
+
+          <h2 className="text-2xl font-bold mt-10 mb-5">
+            Payment Method
+          </h2>
+
+          <div className="space-y-3">
+
+            <label className="flex gap-3">
+              <input
+                type="radio"
+                checked={paymentMethod === "COD"}
+                onChange={() =>
+                  setPaymentMethod("COD")
+                }
+              />
+              Cash On Delivery
+            </label>
+
+            <label className="flex gap-3">
+              <input
+                type="radio"
+                checked={
+                  paymentMethod === "Razorpay"
+                }
+                onChange={() =>
+                  setPaymentMethod("Razorpay")
+                }
+              />
+              Razorpay
+            </label>
+
+          </div>
+
         </div>
+                {/* Order Summary */}
 
-        {/* Order Summary */}
+        <div className="bg-white shadow-xl rounded-xl p-6 h-fit sticky top-24">
 
-        <div className="col-lg-5">
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h3 className="mb-4">
-                Order Summary
-              </h3>
+          <h2 className="text-2xl font-bold mb-6">
+            Order Summary
+          </h2>
 
-              <div className="d-flex justify-content-between mb-2">
-                <span>Items</span>
+          <div className="space-y-4">
 
-                <span>{totalItems}</span>
-              </div>
+            {cartItems.map((item) => (
 
-              <div className="d-flex justify-content-between mb-2">
-                <span>Subtotal</span>
-
-                <span>₹{subtotal}</span>
-              </div>
-
-              <div className="d-flex justify-content-between mb-2">
-                <span>Shipping</span>
-
-                <span>₹{shipping}</span>
-              </div>
-
-              <div className="d-flex justify-content-between mb-2">
-                <span>Tax (18%)</span>
-
-                <span>₹{tax}</span>
-              </div>
-
-              <hr />
-
-              <div className="d-flex justify-content-between fw-bold fs-5">
-                <span>Total</span>
-
-                <span>₹{total}</span>
-              </div>
-
-              <button
-                className="btn btn-dark w-100 mt-4"
-                onClick={placeOrder}
-                disabled={placingOrder}
+              <div
+                key={item._id}
+                className="flex justify-between border-b pb-3"
               >
-                {placingOrder
-                  ? "Processing..."
-                  : paymentMethod ===
-                    "Razorpay"
-                  ? "Pay with Razorpay"
-                  : "Place Order"}
-              </button>
-            </div>
+
+                <div>
+
+                  <p className="font-semibold">
+                    {item.name}
+                  </p>
+
+                  <p className="text-sm text-gray-500">
+                    Qty : {item.quantity}
+                  </p>
+
+                </div>
+
+                <span className="font-semibold">
+                  ₹
+                  {(item.price * item.quantity).toLocaleString(
+                    "en-IN"
+                  )}
+                </span>
+
+              </div>
+
+            ))}
+
           </div>
+
+          <hr className="my-6" />
+
+          <div className="space-y-3">
+
+            <div className="flex justify-between">
+              <span>Total Items</span>
+              <span>{totalItems}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span>₹{subtotal.toLocaleString("en-IN")}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>Shipping</span>
+              <span>
+                {shipping === 0
+                  ? "FREE"
+                  : `₹${shipping}`}
+              </span>
+            </div>
+
+            <div className="flex justify-between">
+              <span>GST (18%)</span>
+              <span>₹{tax.toLocaleString("en-IN")}</span>
+            </div>
+
+            <hr />
+
+            <div className="flex justify-between text-2xl font-bold">
+
+              <span>Total</span>
+
+              <span className="text-cyan-600">
+                ₹{total.toLocaleString("en-IN")}
+              </span>
+
+            </div>
+
+          </div>
+
+          <button
+            onClick={placeOrder}
+            disabled={placingOrder}
+            className={`w-full mt-8 py-4 rounded-xl text-lg font-bold transition ${
+              placingOrder
+                ? "bg-gray-400 cursor-not-allowed text-white"
+                : paymentMethod === "Razorpay"
+                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                : "bg-green-600 hover:bg-green-700 text-white"
+            }`}
+          >
+            {placingOrder
+              ? "Processing..."
+              : paymentMethod === "Razorpay"
+              ? "Pay with Razorpay"
+              : "Place Order"}
+          </button>
+
+          <p className="text-center text-gray-500 mt-5 text-sm">
+            🔒 Your payment information is secure.
+          </p>
+
         </div>
+
       </div>
+
     </div>
   );
 }

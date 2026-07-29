@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -11,6 +12,8 @@ import {
 function Navbar() {
   const navigate = useNavigate();
 
+  const [keyword, setKeyword] = useState("");
+
   // Redux
   const cartItems = useSelector(
     (state) => state.cart.cartItems
@@ -21,9 +24,7 @@ function Navbar() {
   );
 
   // Logged User
-  const user = JSON.parse(
-    localStorage.getItem("user")
-  );
+  const user = JSON.parse(localStorage.getItem("user"));
 
   // Counts
   const cartCount = cartItems.reduce(
@@ -32,6 +33,18 @@ function Navbar() {
   );
 
   const wishlistCount = wishlistItems.length;
+
+  // Search
+  const searchHandler = (e) => {
+    e.preventDefault();
+
+    if (keyword.trim()) {
+      navigate(`/products?search=${encodeURIComponent(keyword.trim())}`);
+      
+    } else {
+      navigate("/products");
+    }
+  };
 
   // Logout
   const logoutHandler = () => {
@@ -45,7 +58,6 @@ function Navbar() {
 
   return (
     <nav className="bg-slate-900 text-white sticky top-0 z-50 shadow-lg">
-
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
 
         {/* Logo */}
@@ -57,19 +69,25 @@ function Navbar() {
         </Link>
 
         {/* Search */}
-        <div className="hidden md:flex items-center bg-white rounded-lg overflow-hidden w-full max-w-md">
-
+        <form
+          onSubmit={searchHandler}
+          className="hidden md:flex items-center bg-white rounded-lg overflow-hidden w-full max-w-md"
+        >
           <input
             type="text"
             placeholder="Search products..."
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
             className="w-full px-4 py-2 text-black outline-none"
           />
 
-          <button className="bg-cyan-500 px-4 py-3 hover:bg-cyan-600">
+          <button
+            type="submit"
+            className="bg-cyan-500 px-4 py-3 hover:bg-cyan-600"
+          >
             <FaSearch />
           </button>
-
-        </div>
+        </form>
 
         {/* Right Menu */}
         <div className="flex items-center gap-6">
@@ -148,7 +166,6 @@ function Navbar() {
         </div>
 
       </div>
-
     </nav>
   );
 }
