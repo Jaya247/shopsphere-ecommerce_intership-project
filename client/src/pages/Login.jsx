@@ -27,9 +27,9 @@ function Login() {
   const fillAdmin = () => {
     setUser({
       email: "admin@gmail.com",
-      password: "admin123",
+      password: "",
     });
-    toast.success("🛡️ Admin credentials filled");
+    toast.success("🛡️ Admin email filled (No password required)");
   };
 
   const fillUser = () => {
