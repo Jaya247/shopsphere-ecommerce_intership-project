@@ -1,5 +1,5 @@
 # 🛒 ShopSphere
-                   
+                                  
 <p align="center">
   <img src="https://img.shields.io/badge/MERN-Stack-blue.svg" alt="MERN Stack">
   <img src="https://img.shields.io/badge/React-18-cyan.svg" alt="React">
