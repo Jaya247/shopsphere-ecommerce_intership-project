@@ -15,7 +15,7 @@
 
 ---
 
-## 📌 About
+## 📌 About          
 
 **ShopSphere** is a state-of-the-art MERN Stack E-Commerce Platform developed as a Major Project. It merges traditional retail with modern AI-driven fashion styling tools.
 
