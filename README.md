@@ -1,4 +1,4 @@
-# 🛒 ShopSphere
+# 🛒 ShopSphere                      
                                   
 <p align="center">
   <img src="https://img.shields.io/badge/MERN-Stack-blue.svg" alt="MERN Stack">
