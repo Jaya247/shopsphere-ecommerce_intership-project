@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/React-18-cyan.svg" alt="React">
   <img src="https://img.shields.io/badge/Tailwind-CSS-38bdf8.svg" alt="Tailwind CSS">
   <img src="https://img.shields.io/badge/AI-Stylist-purple.svg" alt="AI Stylist">
-  <img src="https://img.shields.io/badge/Status-Completed-success.svg" alt="Status">
+  <img src="https://img.shields.io/badge/Status-Completed-success.svg" alt="Status">             
 </p>
 
 <p align="center">
