@@ -1,4 +1,4 @@
-# 🛒 ShopSphere                      
+ # 🛒 ShopSphere                      
                                   
 <p align="center">
   <img src="https://img.shields.io/badge/MERN-Stack-blue.svg" alt="MERN Stack">
@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/AI-Stylist-purple.svg" alt="AI Stylist">
   <img src="https://img.shields.io/badge/Status-Completed-success.svg" alt="Status">             
 </p>
-
+   
 <p align="center">
   <h3>A Premium, Full-Featured MERN Stack E-Commerce & AI Fashion Wardrobe Platform</h3>
   Modern • Secure • Scalable • Responsive • AI-Enabled
